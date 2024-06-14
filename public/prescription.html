@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Page</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway" rel="stylesheet">
+    <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="presStyle.css" rel="stylesheet">
+    <style>
+        @media print {
+            header, footer, #medicineSearch, #searchResults, #done {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center">
+            <h1 class="logo me-auto"><a href="index.html">APEX HOSPITAL</a></h1>
+            <nav id="navbar" class="navbar order-last order-lg-0">
+                <ul>
+                    <li><a class="nav-link scrollto active" href="index.html">Home</a></li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main">
+        <section id="prescription" class="appointment section-bg">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Medicine Prescription</h2>
+                </div>
+                <div id="patientDetails">
+                    <h6 id="hospitalName">APEX HOSPITAL</h6>
+                    <h6 id="patientName"></h6>
+                    <h6 id="patientAge"></h6>
+                    <h6 id="currentDate"></h6>
+                </div>
+                <!-- Search Bar -->
+                <input type="text" id="medicineSearch" placeholder="Search Medicine" class="form-control">
+                <div id="searchResults"></div>
+                <!-- Prescription List Table -->
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Medicine Name</th>
+                            <th>Quantity</th>
+                            <th>Morning</th>
+                            <th>Evening</th>
+                            <th>Night</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prescriptionTableBody">
+                        <!-- Dynamic prescription list will be populated here -->
+                    </tbody>
+                </table>
+                <button id="printPrescription" class="btn btn-primary">Print Prescription</button>
+                <button id="done" class="btn btn-primary" onclick="doctor.html">Done</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row d-flex align-items-center">
+                <div class="col-lg-6 text-lg-start text-center">
+                    <p>&copy; 2024 APEX HOSPITAL. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch and display patient details
+            const urlParams = new URLSearchParams(window.location.search);
+            const patientId = urlParams.get('patientId');
+            fetch(`/api/patient/${patientId}`)
+                .then(response => response.json())
+                .then(patient => {
+                    document.getElementById('patientName').innerText = `Name: ${patient.name}`;
+                    document.getElementById('patientAge').innerText = `Age: ${patient.age}`;
+                    document.getElementById('currentDate').innerText = `Date: ${new Date(patient.date).toLocaleDateString()}`;
+                })
+                .catch(error => console.error('Error fetching patient data:', error));
+
+            // Search medicine
+            document.getElementById('medicineSearch').addEventListener('input', function() {
+                const query = this.value;
+                if (query.length > 2) {
+                    fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const medicines = data.results || [];
+                            const searchResults = document.getElementById('searchResults');
+                            searchResults.innerHTML = '';
+                            medicines.forEach(medicine => {
+                                const resultItem = document.createElement('div');
+                                resultItem.classList.add('search-result-item');
+                                resultItem.innerText = medicine.openfda.brand_name[0];
+                                resultItem.onclick = () => addMedicineToPrescription(medicine);
+                                searchResults.appendChild(resultItem);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching medicine data:', error));
+                }
+            });
+
+            function addMedicineToPrescription(medicine) {
+                const tableBody = document.getElementById('prescriptionTableBody');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${medicine.openfda.brand_name[0]}</td>
+                    <td><input type="number" class="form-control" value="1" min="1"></td>
+                    <td><input type="checkbox" class="form-check-input"></td>
+                    <td><input type="checkbox" class="form-check-input"></td>
+                    <td><input type="checkbox" class="form-check-input"></td>
+                    <td><button class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                `;
+                tableBody.appendChild(row);
+            }
+
+            window.removeRow = function(button) {
+                const row = button.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+            };
+
+            document.getElementById('printPrescription').addEventListener('click', function() {
+                window.print();
+            });
+        });
+
+        document.getElementById('done').addEventListener('click', function() {
+            window.location.href = 'doctor.html';
+        });
+    </script>
+</body>
+</html>

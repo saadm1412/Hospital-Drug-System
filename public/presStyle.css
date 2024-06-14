@@ -1,0 +1,136 @@
+/* Global Styles */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+#header {
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-transform: uppercase;
+}
+
+#header .navbar {
+    margin-left: auto;
+}
+
+#header .navbar a {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+#header .navbar a:hover {
+    color: #007bff;
+}
+
+/* Main Content */
+#main {
+    padding: 100px 0 50px;
+}
+
+.section-bg {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Search Bar */
+#medicineSearch {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+#searchResults {
+    margin-top: 10px;
+}
+
+.search-result-item {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    background: #f9f9f9;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-result-item:hover {
+    background: #e9e9e9;
+}
+
+/* Prescription Table */
+.table {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    padding: 8px;
+}
+
+.table th {
+    background: #007bff;
+    color: #fff;
+    font-size: 14px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: #f9f9f9;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+/* Footer */
+#footer {
+    background: #2c3e50;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}

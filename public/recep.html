@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="style.css" rel="stylesheet">
+    <link href="recep.css" rel="stylesheet">
+</head>
+<body>
+    <!-- ======= Top Bar ======= -->
+    <div id="topbar" class="d-flex align-items-center fixed-top">
+        <div class="container d-flex justify-content-between">
+            <div class="contact-info d-flex align-items-center">
+                <i class="bi bi-envelope"></i> <a href="mailto:apexcare@gmail.com">apexcare@gmail.com</a>
+                <i class="bi bi-phone"></i> +91 9307160871
+            </div>
+        </div>
+    </div>
+    <!-- ======= End of Top Bar ======= -->
+
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center">
+            <h1 class="logo me-auto"><a href="index.html">APEX HOSPITAL</a></h1>
+            <nav id="navbar" class="navbar order-last order-lg-0">
+                <ul>
+                    <li><a class="nav-link scrollto active" href="index.html">Home</a></li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- navbar -->
+            <a href="#" class="appointment-btn scrollto" onclick="openAddPatientModal()"><span class="d-none d-md-inline">Add new</span> Patient</a>
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- ======= Main Content ======= -->
+    <main id="main">
+        <section id="patient-details" class="appointment section-bg">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Patient Details</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Appointment Date</th>
+                            <th>Phone Number</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientTableBody">
+                        <!-- Dynamic patient details will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <!-- ======= End Main Content ======= -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row d-flex align-items-center">
+                <div class="col-lg-6 text-lg-start text-center">
+                    <p>&copy; 2024 APEX HOSPITAL. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Modal for viewing patient details -->
+    <div id="viewPatientModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Patient Details</h2>
+            <p><strong>Name:</strong> <span id="patientNameDetail"></span></p>
+            <p><strong>Email:</strong> <span id="patientEmailDetail"></span></p>
+            <p><strong>Phone:</strong> <span id="patientPhoneDetail"></span></p>
+            <p><strong>Age:</strong> <span id="patientAgeDetail"></span></p>
+            <p><strong>Date:</strong> <span id="appointmentDateDetail"></span></p>
+            <p><strong>Timeslot:</strong> <span id="appointmentTimeslotDetail"></span></p>
+            <p><strong>Message:</strong> <span id="appointmentMessageDetail"></span></p>
+        </div>
+    </div>
+
+    <!-- Modal for adding a new patient -->
+    <div id="addPatientModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Patient</h2>
+            <form id="newPatientForm" action="/submit-appointment" method="post">
+                <label for="patientName">Name:</label>
+                <input type="text" id="patientName" name="name" required><br>
+
+                <label for="patientEmail">Email:</label>
+                <input type="email" id="patientEmail" name="email" ><br>
+
+                <label for="patientPhone">Phone Number:</label>
+                <input type="tel" id="patientPhone" name="phone" required><br>
+
+                <label for="patientAge">Age:</label>
+                <input type="number" id="patientAge" name="age" required><br>
+
+                <label for="appointmentDate">Appointment Date:</label>
+                <input type="date" id="appointmentDate" name="date" required><br>
+
+                <label for="appointmentTimeslot">Timeslot:</label>
+                <input type="text" id="appointmentTimeslot" name="timeslot" required><br>
+
+                <label for="appointmentMessage">Message:</label>
+                <textarea id="appointmentMessage" name="message" ></textarea><br>
+
+                <button type="submit" class="save-button">Add Patient</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Your existing JavaScript code -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/appointments')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('patientTableBody');
+                    tableBody.innerHTML = '';
+                    data.forEach(patient => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${patient.name}</td>
+                            <td>${new Date(patient.date).toLocaleDateString()}</td>
+                            <td>${patient.phone}</td>
+                            <td><button onclick="viewDetails('${patient.name}', '${patient.email}', '${patient.phone}', ${patient.age}, '${new Date(patient.date).toLocaleDateString()}', '${patient.message}', '${patient.timeslot}')">View</button></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching patient data:', error));
+        });
+
+        function viewDetails(name, email, phone, age, date, message, timeslot) {
+            document.getElementById('patientNameDetail').innerText = name;
+            document.getElementById('patientEmailDetail').innerText = email;
+            document.getElementById('patientPhoneDetail').innerText = phone;
+            document.getElementById('patientAgeDetail').innerText = age;
+            document.getElementById('appointmentDateDetail').innerText = date;
+            document.getElementById('appointmentMessageDetail').innerText = message;
+            document.getElementById('appointmentTimeslotDetail').innerText = timeslot;
+
+            var modal = document.getElementById("viewPatientModal");
+            var span = modal.querySelector(".close");
+
+            modal.style.display = "block";
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        function openAddPatientModal() {
+            var modal = document.getElementById("addPatientModal");
+            var span = modal.querySelector(".close");
+
+            modal.style.display = "block";
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
