@@ -4,17 +4,21 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4000;
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+const HOST="sql202.infinityfree.co";
+const USER="if0_36826590";
+const PASS="YuNv5Bhz7WZs";
+const Database="if0_36826590_apex";
 // Create a connection to the MySQL database
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  host: HOST,
+  user: USER,
+  password: PASS,
+  database: Database,
 });
 
 // Connect to the database
