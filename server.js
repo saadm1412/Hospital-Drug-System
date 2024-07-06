@@ -4,27 +4,30 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 9000;
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-const HOST="sql202.infinityfree.co";
-const USER="if0_36826590";
-const PASS="YuNv5Bhz7WZs";
-const Database="if0_36826590_apex";
+const HOST = "database-1.cjs84igecwkk.ap-south-1.rds.amazonaws.com" || process.env.DB_HOST;
+const USER = "admin" || process.env.DB_USER;
+const PASS = "saadm1412" || process.env.DB_PASS;
+const Database = "apex" || process.env.DB_NAME;
+
 // Create a connection to the MySQL database
 const db = mysql.createConnection({
   host: HOST,
   user: USER,
   password: PASS,
   database: Database,
+  port: 3306
 });
 
 // Connect to the database
 db.connect((err) => {
   if (err) {
-    throw err;
+    console.error('Error connecting to the MySQL database:', err);
+    return;
   }
   console.log('Connected to the MySQL database');
 });
@@ -67,6 +70,7 @@ app.get('/api/appointments', (req, res) => {
     res.json(results);
   });
 });
+
 // Route to get a specific patient by ID
 app.get('/api/patient/:id', (req, res) => {
   const { id } = req.params;
@@ -95,11 +99,10 @@ app.post('/submit-prescription', (req, res) => {
   });
 });
 
-
 // API endpoint to get patient details by ID
 app.get('/api/patient/:id', (req, res) => {
   const patientId = req.params.id;
-  connection.query('SELECT name, age, date FROM appointments WHERE id = ?', [patientId], (error, results) => {
+  db.query('SELECT name, age, date FROM appointments WHERE id = ?', [patientId], (error, results) => {
       if (error) {
           return res.status(500).json({ error: 'Database query error' });
       }
