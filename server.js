@@ -9,10 +9,10 @@ const PORT = process.env.PORT || 9000;
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-const HOST = "database-1.cjs84igecwkk.ap-south-1.rds.amazonaws.com" || process.env.DB_HOST;
-const USER = "admin" || process.env.DB_USER;
-const PASS = "saadm1412" || process.env.DB_PASS;
-const Database = "apex" || process.env.DB_NAME;
+const HOST = "database-1.cjs84igecwkk.ap-south-1.rds.amazonaws.com";
+const USER = "admin";
+const PASS = "saadm1412";
+const Database = "apex";
 
 // Create a connection to the MySQL database
 const db = mysql.createConnection({
