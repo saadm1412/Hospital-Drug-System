@@ -4,14 +4,14 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 8080;
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-const HOST = "database-1.cjs84igecwkk.ap-south-1.rds.amazonaws.com";
-const USER = "admin";
-const PASS = "saadm1412";
+const HOST = "mysql-9e1e123-msaadmujawar14-e0d7.c.aivencloud.com";
+const USER = "avnadmin";
+const PASS = "AVNS_Be-ZZ9dfsXfRwozhYW3";
 const Database = "apex";
 
 // Create a connection to the MySQL database
@@ -20,7 +20,7 @@ const db = mysql.createConnection({
   user: USER,
   password: PASS,
   database: Database,
-  port: 3306
+  port: 27040
 });
 
 // Connect to the database
